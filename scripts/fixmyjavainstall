@@ -1,14 +1,26 @@
 #! /usr/bin/env bash
 
-echo "$1"
-for file in "$1"/bin/*
-do
-	echo "$file"
-	if [ -x "$file" ]
-	then
-		filename=$(basename "$file")
-		sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
-		sudo update-alternatives --set "$filename" "$file"
-		echo "$file" "$filename"
-	fi
-done
+function fixMyJavaInstall() {
+	echo "$1"
+	command -v update-alternatives
+	local hasUpdateAlternatives
+	hasUpdateAlternatives=$?
+	for file in "$1"/bin/*
+	do
+		echo "$file"
+		if [ -x "$file" ]
+		then
+			local filename
+			filename=$(basename "$file")
+			if [ $hasUpdateAlternatives -eq 0 ]; then
+				sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
+				sudo update-alternatives --set "$filename" "$file"
+			else
+				sudo ln -sf "$file" "/usr/bin/$filename"
+			fi
+			echo "$file" "$filename"
+		fi
+	done
+}
+
+fixMyJavaInstall "$@"
