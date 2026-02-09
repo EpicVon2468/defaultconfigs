@@ -5,6 +5,9 @@ function fixMyJavaInstall() {
 	command -v update-alternatives
 	local hasUpdateAlternatives
 	hasUpdateAlternatives=$?
+	command -v termux-setup-storage
+	local isTermux
+	isTermux=$?
 	for file in "$1"/bin/*
 	do
 		echo "$file"
@@ -12,8 +15,7 @@ function fixMyJavaInstall() {
 		then
 			local filename
 			filename=$(basename "$file")
-			command -v termux-setup-storage
-			if [ $? -eq 1 ]; then
+			if [ $isTermux -eq 1 ]; then
 				if [ $hasUpdateAlternatives -eq 0 ]; then
 					sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
 					sudo update-alternatives --set "$filename" "$file"
