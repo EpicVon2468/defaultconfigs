@@ -1,0 +1,120 @@
+#! /usr/bin/env bash
+
+jdkVersion="25.0.2"
+jbrVersion="b315.62"
+
+# only edit variables above this line as the user
+
+#if [ -d "$HOME/Programs" ]; then
+#	true
+#else
+#	mkdir "$HOME/Programs"
+#fi
+#
+#cd "$HOME/Programs" || exit
+
+logOut="jvm-default-install-log.txt"
+if [ -f "$logOut" ]; then
+	rm "$logOut"
+fi
+touch "$logOut"
+
+function fixMyJavaInstall() {
+	echo "$1"
+	command -v update-alternatives
+	local hasUpdateAlternatives
+	hasUpdateAlternatives=$?
+	for file in "$1"/bin/*
+	do
+		echo "$file"
+		if [ -x "$file" ]
+		then
+			local filename
+			filename=$(basename "$file")
+			if [ $hasUpdateAlternatives -eq 0 ]; then
+				sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
+				sudo update-alternatives --set "$filename" "$file"
+			else
+				sudo ln -sf "$file" "/usr/bin/$filename"
+			fi
+			echo "$file" "$filename"
+		fi
+	done
+}
+
+function installJBR() {
+	local needsSetup
+	needsSetup=0
+	if [ -d "./JetBrainsRuntime" ]; then
+		if [ -d "$(readlink -f "./JetBrainsRuntime/jbr-latest")" ]; then
+			true
+		else
+			needsSetup=1
+		fi
+    	true
+    else
+    	mkdir "./JetBrainsRuntime"
+    	needsSetup=1
+    fi
+	cd "./JetBrainsRuntime" || exit
+
+	local sysArch
+	sysArch="$(uname -m)"
+	if [ "$sysArch" == "x86_64" ]; then
+		sysArch="x64"
+	fi
+
+	local baseFile
+	baseFile="jbr-$jdkVersion-linux-$sysArch-$jbrVersion"
+	local tarFile
+	tarFile="$baseFile.tar.gz"
+	local baseURL
+	baseURL=https://cache-redirector.jetbrains.com/intellij-jbr/$tarFile
+
+	wget "$baseURL"
+	wget "$baseURL.checksum"
+
+	# Can't use 'shasum -a 512' since it's only available as sha512sum on Termux
+	sha512sum -c "$tarFile.checksum"
+
+	local sumStatus
+	sumStatus=$?
+
+	if [ $sumStatus -eq 1 ]; then
+		rm "$tarFile"
+		rm "$tarFile.checksum"
+		{
+			echo -e "Verification of JBR-$jdkVersion-$jbrVersion failed!\n"
+			cat "$tarFile.checksum"
+			echo -e "\n"
+			sha512sum "$tarFile"
+		} >> "$logOut"
+		exit
+	fi
+
+	mkdir "$tarFile"
+	tar -xzvf "$tarFile"
+
+	local symLinkInstall
+	symLinkInstall="$(realpath "jbr-latest")"
+	ln -sf "$(realpath "$baseFile")" "$symLinkInstall"
+
+	if [ $needsSetup -eq 1 ]; then
+		fixMyJavaInstall "$symLinkInstall"
+	fi
+
+	rm "$tarFile"
+	rm "$tarFile.checksum"
+
+	cd ..
+}
+
+installJBR >> "$logOut" 2>&1
+
+function installKotlinCompiler() {
+	true
+}
+
+function installKotlinNative() {
+	true
+}
