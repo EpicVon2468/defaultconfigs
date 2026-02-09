@@ -1,0 +1,9 @@
+[versions]
+kotlin = "2.3.10"
+self = "0.0.0"
+
+[libraries]
+jetBrains-annotations = { module = "org.jetbrains:annotations", version = "26.0.2-1" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
