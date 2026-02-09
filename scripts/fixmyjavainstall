@@ -1,14 +1,14 @@
 #! /usr/bin/env bash
 
-echo $1
-for file in $1/bin/*
+echo "$1"
+for file in "$1"/bin/*
 do
-	echo $file
-	if [ -x $file ]
+	echo "$file"
+	if [ -x "$file" ]
 	then
-		filename=`basename $file`
-		sudo update-alternatives --install /usr/bin/$filename $filename $file 2000
-		sudo update-alternatives --set $filename $file
-		echo $file $filename
+		filename=$(basename "$file")
+		sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
+		sudo update-alternatives --set "$filename" "$file"
+		echo "$file" "$filename"
 	fi
 done
