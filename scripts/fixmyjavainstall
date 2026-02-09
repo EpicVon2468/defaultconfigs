@@ -13,10 +13,21 @@ function fixMyJavaInstall() {
 			local filename
 			filename=$(basename "$file")
 			if [ $hasUpdateAlternatives -eq 0 ]; then
-				sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
-				sudo update-alternatives --set "$filename" "$file"
+				command -v termux-setup-storage
+				if [ $? -eq 1 ]; then
+					sudo update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
+                    sudo update-alternatives --set "$filename" "$file"
+				else
+					update-alternatives --install /usr/bin/"$filename" "$filename" "$file" 2000
+					update-alternatives --set "$filename" "$file"
+				fi
 			else
-				sudo ln -sf "$file" "/usr/bin/$filename"
+				command -v termux-setup-storage
+				if [ $? -eq 1 ]; then
+					sudo ln -sf "$file" "/usr/bin/$filename"
+				else
+					ln -sf "$file" "/usr/bin/$filename"
+				fi
 			fi
 			echo "$file" "$filename"
 		fi
