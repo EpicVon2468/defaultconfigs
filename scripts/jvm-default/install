@@ -5,13 +5,13 @@ jbrVersion="b315.62"
 
 # only edit variables above this line as the user
 
-#if [ -d "$HOME/Programs" ]; then
-#	true
-#else
-#	mkdir "$HOME/Programs"
-#fi
-#
-#cd "$HOME/Programs" || exit
+if [ -d "$HOME/Programs" ]; then
+	true
+else
+	mkdir "$HOME/Programs"
+fi
+
+cd "$HOME/Programs" || exit
 
 logOut="jvm-default-install-log.txt"
 if [ -f "$logOut" ]; then
