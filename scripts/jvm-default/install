@@ -3,6 +3,8 @@
 jdkVersion="25.0.2"
 jbrVersion="b315.62"
 
+kotlinVersion="2.3.10"
+
 # only edit variables above this line as the user
 
 if [ -d "$HOME/Programs" ]; then
@@ -34,21 +36,25 @@ function fixMyJavaInstall() {
 		then
 			local filename
 			filename=$(basename "$file")
-			if [ $isTermux -eq 1 ]; then
-				if [ $hasUpdateAlternatives -eq 0 ]; then
-					sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
-					sudo update-alternatives --set "$filename" "$file"
-				else
-					sudo ln -sf "$file" "usr/bin/$filename"
-				fi
+			if [ $hasUpdateAlternatives -eq 0 ]; then
+				sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
+				sudo update-alternatives --set "$filename" "$file"
 			else
-				ln -sf "$file" "$TERMUX__PREFIX/bin/$filename"
+				sudo ln -sf "$file" "usr/bin/$filename"
 			fi
+			# FIXME: WTF? Why did this cause problems?
+#			if [ $isTermux -eq 1 ]; then
+#				true
+#			else
+#				echo "You can't possibly be here."
+#				ln -sf "$file" "$TERMUX__PREFIX/bin/$filename"
+#			fi
 			echo "$file" "$filename"
 		fi
 	done
 }
 
+# This is... still broken on Termux.  Future me problem.
 function installJBR() {
 	local needsSetup
 	needsSetup=0
@@ -88,14 +94,14 @@ function installJBR() {
 	sumStatus=$?
 
 	if [ $sumStatus -eq 1 ]; then
-		rm "$tarFile"
-		rm "$tarFile.checksum"
 		{
 			echo -e "Verification of JBR-$jdkVersion-$jbrVersion failed!\n"
 			cat "$tarFile.checksum"
 			echo -e "\n"
 			sha512sum "$tarFile"
 		} >> "$logOut"
+		rm "$tarFile"
+		rm "$tarFile.checksum"
 		exit
 	fi
 
@@ -119,8 +125,68 @@ function installJBR() {
 installJBR >> "$logOut" 2>&1
 
 function installKotlinCompiler() {
-	true
+	local needsSetup
+	needsSetup=0
+	if [ -d "./KotlinCompiler" ]; then
+		if [ -d "$(readlink -f "./KotlinCompiler/kotlin-compiler-latest")" ]; then
+			true
+		else
+			needsSetup=1
+		fi
+		true
+	else
+		mkdir "./KotlinCompiler"
+		needsSetup=1
+	fi
+	cd "./KotlinCompiler" || exit
+
+	local baseFile
+	baseFile="kotlin-compiler-$kotlinVersion"
+	local tarFile
+	tarFile="$baseFile.zip"
+	local baseURL
+	baseURL=https://github.com/JetBrains/kotlin/releases/download/v$kotlinVersion/$tarFile
+
+	wget "$baseURL"
+	wget "$baseURL.sha256"
+	echo " $baseFile" >> "$tarFile.sha256"
+
+	# Can't use 'shasum -a 256' since it's only available as sha512sum on Termux
+	sha256sum -c "$tarFile.sha256"
+
+	local sumStatus
+	sumStatus=$?
+
+	if [ $sumStatus -eq 1 ]; then
+		{
+			echo -e "Verification of Kotlin Compiler $kotlinVersion failed!\n"
+			cat "$tarFile.sha256"
+			echo -e "\n"
+			sha256sum "$tarFile"
+		} >> "$logOut"
+		rm "$tarFile"
+		rm "$tarFile.sha256"
+		exit
+	fi
+
+	mkdir "$tarFile"
+	unzip "$tarFile" -d "$(realpath "$baseFile")"
+
+	local symLinkInstall
+	symLinkInstall="$(realpath "kotlin-compiler-latest")"
+	ln -sf "$(realpath "$baseFile")" "$symLinkInstall"
+
+	if [ $needsSetup -eq 1 ]; then
+		fixMyJavaInstall "$symLinkInstall/kotlinc"
+	fi
+
+	rm "$tarFile"
+	rm "$tarFile.sha256"
+
+	cd ..
 }
+
+installKotlinCompiler >> "$logOut" 2>&1
 
 function installKotlinNative() {
 	true
