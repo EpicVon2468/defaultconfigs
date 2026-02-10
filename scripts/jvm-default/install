@@ -40,7 +40,7 @@ function fixMyJavaInstall() {
 				sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
 				sudo update-alternatives --set "$filename" "$file"
 			else
-				sudo ln -sf "$file" "usr/bin/$filename"
+				sudo ln -sf "$file" "/usr/bin/$filename"
 			fi
 			# FIXME: WTF? Why did this cause problems?
 #			if [ $isTermux -eq 1 ]; then

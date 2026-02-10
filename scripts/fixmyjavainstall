@@ -20,7 +20,7 @@ function fixMyJavaInstall() {
 					sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
 					sudo update-alternatives --set "$filename" "$file"
 				else
-					sudo ln -sf "$file" "usr/bin/$filename"
+					sudo ln -sf "$file" "/usr/bin/$filename"
 				fi
 			else
 				ln -sf "$file" "$TERMUX__PREFIX/bin/$filename"
