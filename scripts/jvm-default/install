@@ -78,7 +78,7 @@ function installJBR() {
 	fi
 
 	local baseFile
-	baseFile="jbr-$jdkVersion-linux-$sysArch-$jbrVersion"
+	baseFile="jbrsdk-$jdkVersion-linux-$sysArch-$jbrVersion"
 	local tarFile
 	tarFile="$baseFile.tar.gz"
 	local baseURL
@@ -95,7 +95,7 @@ function installJBR() {
 
 	if [ $sumStatus -eq 1 ]; then
 		{
-			echo -e "Verification of JBR-$jdkVersion-$jbrVersion failed!\n"
+			echo -e "Verification of JBR $jdkVersion-$jbrVersion failed!\n"
 			cat "$tarFile.checksum"
 			echo -e "\n"
 			sha512sum "$tarFile"
