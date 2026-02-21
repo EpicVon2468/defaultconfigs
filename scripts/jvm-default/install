@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 jdkVersion="25.0.2"
-jbrVersion="b315.62"
+jbrVersion="b329.66"
 
 kotlinVersion="2.3.10"
 
