@@ -23,6 +23,9 @@
 hs_err_pid*
 .attach_pid*
 
+# Rust
+/target
+
 # OS-specific
 .DS_store
 Thumbs.db
