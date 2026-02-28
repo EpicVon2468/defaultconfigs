@@ -108,13 +108,11 @@ function installJBR() {
 	mkdir "$tarFile"
 	tar -xzvf "$tarFile"
 
-	local symLinkInstall
-	symLinkInstall="$(realpath "jbr-latest")"
-	ln -sf "$(realpath "$baseFile")" "$symLinkInstall"
+	local jbrLatest
+	jbrLatest="$(realpath "jbr-latest")"
+	ln -sf "$(realpath "$baseFile")" "$jbrLatest"
 
-	if [ $needsSetup -eq 1 ]; then
-		fixMyJavaInstall "$symLinkInstall"
-	fi
+	fixMyJavaInstall "$jbrLatest"
 
 	rm "$tarFile"
 	rm "$tarFile.checksum"
