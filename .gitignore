@@ -1,7 +1,6 @@
 # Gradle
 **/.gradle/
 **/build/
-!gradle-default/wrapper/gradle-wrapper.jar
 !gradle/wrapper/gradle-wrapper.jar
 
 # CMake
