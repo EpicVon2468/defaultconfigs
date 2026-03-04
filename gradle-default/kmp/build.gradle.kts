@@ -21,6 +21,7 @@ tasks.withType<JavaCompile> {
 
 tasks.withType<JavaExec> {
 	jvmArgs("-XX:+UseCompactObjectHeaders", "--enable-native-access=ALL-UNNAMED")
+	standardInput = System.`in`
 }
 
 kotlin {
