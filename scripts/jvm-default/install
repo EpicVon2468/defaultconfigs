@@ -3,7 +3,7 @@
 jdkVersion="25.0.2"
 jbrVersion="b329.66"
 
-kotlinVersion="2.3.10"
+kotlinVersion="2.3.20"
 
 # only edit variables above this line as the user
 
@@ -120,7 +120,7 @@ function installJBR() {
 	cd ..
 }
 
-installJBR >> "$logOut" 2>&1
+installJBR #>> "$logOut" 2>&1
 
 function installKotlinCompiler() {
 	local needsSetup
@@ -184,7 +184,7 @@ function installKotlinCompiler() {
 	cd ..
 }
 
-installKotlinCompiler >> "$logOut" 2>&1
+installKotlinCompiler #>> "$logOut" 2>&1
 
 function installKotlinNative() {
 	local needsSetup
@@ -248,4 +248,4 @@ function installKotlinNative() {
 	cd ..
 }
 
-installKotlinNative >> "$logOut" 2>&1
+installKotlinNative #>> "$logOut" 2>&1
