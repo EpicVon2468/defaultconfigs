@@ -1,2 +1,15 @@
 set tabsize 4
 set nonewlines
+set unix
+set autoindent
+set zap
+
+bind ^c copy main help
+bind ^x cut main help
+bind ^v paste main help
+bind ^z undo all
+bind ^f whereis all
+bind Sh-M-Q exit all
+bind ^l refresh all
+bind ^h help all
+bind ^s writeout main

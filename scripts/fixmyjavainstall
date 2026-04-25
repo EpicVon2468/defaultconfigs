@@ -15,16 +15,19 @@ function fixMyJavaInstall() {
 		then
 			local filename
 			filename=$(basename "$file")
-			if [ $isTermux -eq 1 ]; then
-				if [ $hasUpdateAlternatives -eq 0 ]; then
-					sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
-					sudo update-alternatives --set "$filename" "$file"
-				else
-					sudo ln -sf "$file" "/usr/bin/$filename"
-				fi
+			if [ $hasUpdateAlternatives -eq 0 ]; then
+				sudo update-alternatives --install "/usr/bin/$filename" "$filename" "$file" 2000
+				sudo update-alternatives --set "$filename" "$file"
 			else
-				ln -sf "$file" "$TERMUX__PREFIX/bin/$filename"
+				sudo ln -sf "$file" "/usr/bin/$filename"
 			fi
+			# FIXME: WTF? Why did this cause problems?
+#			if [ $isTermux -eq 1 ]; then
+#				true
+#			else
+#				echo "You can't possibly be here."
+#				ln -sf "$file" "$TERMUX__PREFIX/bin/$filename"
+#			fi
 			echo "$file" "$filename"
 		fi
 	done
