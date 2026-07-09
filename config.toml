@@ -1,0 +1,85 @@
+theme = "rose_pine"
+
+[editor]
+# Why isn't this on by default?!
+trim-trailing-whitespace = true
+# Bane of my existence
+middle-click-paste = false
+# System clipboard
+default-yank-register = "+"
+# Why is this on by default?!
+insert-final-newline = false
+# Fuck you Microslop
+default-line-ending = "lf"
+
+[editor.cursor-shape]
+normal = "block"
+insert = "underline"
+
+[editor.file-picker]
+max-depth = 10
+
+[keys.normal]
+# IntelliJ-style code action binding
+"A-ret" = "code_action"
+# Scrolling
+"C-up" = "scroll_up"
+"C-down" = "scroll_down"
+# Bash-style movement controls
+"A-left" = "move_prev_word_start"
+"A-right" = "move_next_word_start"
+# Replaces <A-up> and <A-down>
+"C-S-up" = "expand_selection"
+"C-S-down" = "shrink_selection"
+# FIXME: Jump between code items like in IntelliJ Platform IDEs
+"A-up" = "no_op"
+"A-down" = "no_op"
+# I don't like editor macros
+"Q" = "no_op"
+"q" = "no_op"
+# "Normal" keybinds
+"C-z" = "undo"
+"C-r" = "redo"
+"u" = "no_op" # was "undo"
+# FIXME: Toggle comments not working with this binding???
+"C-/" = "toggle_comments"
+"C-c" = "yank"
+"C-v" = "paste_after"
+"C-V" = "paste_after"
+"p" = "no_op" # was "paste_after"
+"P" = "no_op" # was "paste_before"
+"y" = "no_op" # was "yank"
+"/" = "no_op" # was "search"
+"C-f" = "search"
+"C-a" = "select_all"
+"%" = "no_op" # was "select_all"
+"d" = "delete_selection_noyank" # Make deletion not copy to clipboard
+"C-x" = "delete_selection" # This copies to clipboard
+# Thanks I hate it
+"C" = "no_op" # was "copy_selection_on_next_line"
+"A-C" = "no_op" # was "copy_selection_on_prev_line"
+"tab" = "no_op"
+"o" = "no_op" # was "open_below"
+"O" = "no_op" # was "open_above"
+"w" = "no_op" # was "move_next_word_start"
+"b" = "no_op" # was "move_prev_word_start"
+"e" = "no_op" # was "move_next_word_end"
+"h" = "no_op" # was "move_char_left"
+"j" = "no_op" # was "move_visual_line_down"
+"k" = "no_op" # was "move_visual_line_up"
+"l" = "no_op" # was "move_char_right"
+# Unbinding this isn't working!!!
+"." = "no_op" # was Repeat last insert
+
+[keys.normal.space]
+"/" = "toggle_comments"
+"c" = "no_op" # was "toggle_comments"
+
+[keys.insert]
+# "Normal" keybinds
+"C-z" = "undo"
+"C-r" = "redo"
+# Unbind some keys
+"C-j" = "no_op" # was "insert_newline"
+"C-u" = "no_op" # was "kill_to_line_start"
+"C-k" = "no_op" # was "kill_to_line_end"
